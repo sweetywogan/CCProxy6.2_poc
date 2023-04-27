@@ -6,3 +6,5 @@ cal.py为测算溢出距离脚本
 cal.txt为实验时随机生成的不重复的长字符串
 
 poc.py为复现脚本
+
+generateA.py为生成任意数量A的脚本
